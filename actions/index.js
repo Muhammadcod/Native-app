@@ -1,3 +1,5 @@
+import { getDecks } from "../utils/api";
+
 export const RECEIVE_DECK = 'RECEIVE_DECKS'
 export const ADD_DECK = 'ADD_DECK'
 
@@ -14,3 +16,12 @@ export function addEntry (deck) {
         deck,
     }
 }
+/*
+export function handleInitialData() {
+    return dispatch => {
+        return getDecks().then(decks => {
+            dispatch(receiveDecks(decks));
+        });
+    };
+}*/
+
