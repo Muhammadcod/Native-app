@@ -8,11 +8,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons, FontAwesome } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { View } from 'react-native-web'
 import reducer from './reducers'
 // import DeckCard from './components/DeckCard'
 import DeckList from './components/DeckList'
 import AddDeck from './components/AddDeck'
 import { white, purple } from './utils/colors'
+import Quiz from './components/Quiz'
 
 const TabNavigator = {
   Home: {
@@ -32,7 +34,7 @@ const TabNavigator = {
       tabBarIcon: ({ tintColor }) => (
         <FontAwesome name="plus-square" size={30} color={tintColor} />
       ),
-      title: 'Add Entry',
+      title: 'Add Deck',
     },
   },
 }
@@ -65,12 +67,15 @@ const Tab =
 export default function App() {
   return (
     <Provider store={createStore(reducer)}>
-      <NavigationContainer>
+      <View style={{ flex: 1 }}>
+        <Quiz />
+      </View>
+      {/* <NavigationContainer>
         <Tab.Navigator {...TabNavigatorConfig}>
           <Tab.Screen {...TabNavigator.Home} />
           <Tab.Screen {...TabNavigator.AddDeck} />
         </Tab.Navigator>
-      </NavigationContainer>
+      </NavigationContainer> */}
     </Provider>
   )
 }
