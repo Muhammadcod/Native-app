@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View } from 'react-native-web'
+import { Text, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
+import { black, white, red } from '../utils/colors'
 
 // The Button from the last section without the interpolations
 const Button = styled.View`
@@ -16,11 +17,11 @@ const Button = styled.View`
 `
 
 // A new component based on Button, but with some override styles
-const StartButton = styled(Button)`
+const CorrectButton = styled(Button)`
   border-color: tomato;
 `
 // A new component based on Button, but with some override styles
-const DeleteButton = styled(Button)`
+const IncorrectButton = styled(Button)`
   border-color: none;
 `
 
@@ -29,7 +30,7 @@ const ButtonText = styled.Text`
   padding: 20px;
 `
 
-class DeckCard extends Component {
+class QuizView extends Component {
   _onPressButton = () => {
     alert('You tapped the button!')
   }
@@ -43,8 +44,7 @@ class DeckCard extends Component {
         <View
           style={{ flex: 2, textAlign: 'center', border: '1px solid black' }}
         >
-          <Text>title</Text>
-          <Text>card</Text>
+          <Text>Where do you make Ajax requests in React?</Text>
         </View>
         <View
           style={{
@@ -56,18 +56,18 @@ class DeckCard extends Component {
         >
           <TouchableOpacity onPress={this._onPressButton}>
             <Button>
-              <ButtonText>Add Card</ButtonText>
+              <ButtonText>Answer</ButtonText>
             </Button>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._onPressButton}>
-            <StartButton primary>
-              <ButtonText>Start Quiz</ButtonText>
-            </StartButton>
+            <CorrectButton primary>
+              <ButtonText>Correct</ButtonText>
+            </CorrectButton>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._onPressButton}>
-            <DeleteButton>
-              <ButtonText>Delete Deck</ButtonText>
-            </DeleteButton>
+            <IncorrectButton>
+              <ButtonText>Incorrect</ButtonText>
+            </IncorrectButton>
           </TouchableOpacity>
         </View>
       </View>
@@ -75,4 +75,4 @@ class DeckCard extends Component {
   }
 }
 
-export default connect()(DeckCard)
+export default QuizView

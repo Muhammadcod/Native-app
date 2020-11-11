@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import styled from 'styled-components/native'
+import { black, white, red } from '../utils/colors'
 
 // Create a Wrapper component that'll render a <section> tag with some styles
 const Wrapper = styled.View`

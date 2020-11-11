@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { TextInput, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
-import { connect } from 'react-redux'
-import DeckView from './DeckView'
 import { black, white, red } from '../utils/colors'
 
 const Button = styled.View`
@@ -19,14 +17,21 @@ const ButtonText = styled.Text`
   padding: 20px;
 `
 
-class AddDeck extends Component {
+class AddCard extends Component {
+  _onPressButton = () => {
+    alert('You tapped the button!')
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View
-          style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Text>What is the title of your new deck?</Text>
+        <View style={{ flex: 1 }}>
+          <TextInput
+            style={{ height: 40 }}
+            placeholder="Type here to translate!"
+            // onChangeText=""
+            defaultValue=""
+          />
           <TextInput
             style={{ height: 40 }}
             placeholder="Type here to translate!"
@@ -34,19 +39,10 @@ class AddDeck extends Component {
             defaultValue=""
           />
         </View>
-        <View
-          style={{
-            flex: 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-            border: '1px solid black',
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('DeckView')}
-          >
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={this._onPressButton}>
             <Button primary>
-              <ButtonText primary>Create Deck</ButtonText>
+              <ButtonText primary>Submit</ButtonText>
             </Button>
           </TouchableOpacity>
         </View>
@@ -55,9 +51,4 @@ class AddDeck extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    decks: state,
-  }
-}
-export default connect(mapStateToProps)(AddDeck)
+export default AddCard
