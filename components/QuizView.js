@@ -1,78 +1,207 @@
 import React, { Component } from 'react'
-import { View } from 'react-native-web'
-import { Text, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
+  StyleSheet,
+} from 'react-native'
 import styled from 'styled-components/native'
-import { black, white, red } from '../utils/colors'
+import { connect } from 'react-redux'
+import { black, white, green, red, lightPurp } from '../utils/colors'
 
-// The Button from the last section without the interpolations
-const Button = styled.View`
-  background: ${(props) => (props.primary ? 'black' : 'white')};
-  color: ${(props) => (props.primary ? 'white' : 'black')};
-
-  margin-bottom: 30px;
-  width: 260;
+const Container = styled.View`
+  flex: 1;
+  background: white;
+`
+const QuizWrapper = styled(View)`
+  justify-content: center;
   align-items: center;
-  border: 2px solid palevioletred;
+  flex: 2;
+  padding: 0 20px;
+`
+const Buttongroup = styled(QuizWrapper)`
+  flex: 1;
+  justify-content: flex-end;
+`
+
+const CorrectButton = styled(View)`
+  background: ${(props) => (props.primary ? green : 'white')};
+  margin-bottom: 20px;
+  width: 260px;
+  align-items: center;
   border-radius: 3px;
 `
 
-// A new component based on Button, but with some override styles
-const CorrectButton = styled(Button)`
-  border-color: tomato;
-`
-// A new component based on Button, but with some override styles
-const IncorrectButton = styled(Button)`
-  border-color: none;
+const IncorrectButton = styled(CorrectButton)`
+  background: ${(props) => (props.primary ? 'white' : red)};
 `
 
 const ButtonText = styled.Text`
+  color: ${(props) => (props.primary ? red : white)};
   text-align: center;
   padding: 20px;
 `
+const QuizText = styled.Text`
+  color: ${(props) => (props.primary ? red : white)};
+  text-align: center;
+`
 
 class QuizView extends Component {
-  _onPressButton = () => {
-    alert('You tapped the button!')
+  state = {
+    index: 0,
+    isToggled: false,
+    correctlyAnswered: 0,
+    quizCompleted: false,
+  }
+
+  UNSAFE_componentWillMount() {
+    this.animatedValue = new Animated.Value(0)
+    this.value = 0
+    this.animatedValue.addListener(({ value }) => {
+      this.value = value
+    })
+    this.frontInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['0deg', '180deg'],
+    })
+    this.backInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['180deg', '360deg'],
+    })
+  }
+
+  flipCard = () => {
+    if (this.value >= 90) {
+      Animated.spring(this.animatedValue, {
+        toValue: 0,
+        friction: 8,
+        tension: 10,
+        useNativeDriver: true,
+      }).start()
+    } else {
+      Animated.spring(this.animatedValue, {
+        toValue: 180,
+        friction: 8,
+        tension: 10,
+        useNativeDriver: true,
+      }).start()
+    }
+    this.setState({ isToggled: !this.state.isToggled })
+  }
+
+  onPressButton = (selectedAnswerStatus) => {
+    const { deck } = this.props
+    const { questions } = deck
+    const { index, correctlyAnswered, isToggled } = this.state
+
+    if (index + 1 === questions.length) {
+      this.setState((prevState) => ({ quizCompleted: true }))
+    } else {
+      this.setState((prevState) => ({
+        index: prevState.index + 1,
+        correctlyAnswered: selectedAnswerStatus
+          ? correctlyAnswered + 1
+          : correctlyAnswered,
+      }))
+      if (isToggled) {
+        this.flipCard()
+      }
+    }
   }
 
   render() {
+    const frontAnimatedStyle = {
+      transform: [{ rotateY: this.frontInterpolate }],
+    }
+    const backAnimatedStyle = {
+      transform: [{ rotateY: this.backInterpolate }],
+    }
+    const { deck } = this.props
+    const { index, quizCompleted, correctlyAnswered } = this.state
+    const current = deck.questions[index]
+
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, border: '1px solid black' }}>
-          <Text>back</Text>
-        </View>
-        <View
-          style={{ flex: 2, textAlign: 'center', border: '1px solid black' }}
-        >
-          <Text>Where do you make Ajax requests in React?</Text>
-        </View>
-        <View
-          style={{
-            flex: 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-            border: '1px solid black',
-          }}
-        >
-          <TouchableOpacity onPress={this._onPressButton}>
-            <Button>
-              <ButtonText>Answer</ButtonText>
-            </Button>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._onPressButton}>
-            <CorrectButton primary>
-              <ButtonText>Correct</ButtonText>
-            </CorrectButton>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._onPressButton}>
-            <IncorrectButton>
-              <ButtonText>Incorrect</ButtonText>
-            </IncorrectButton>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Container>
+        {!quizCompleted ? (
+          <>
+            <View>
+              <Text>
+                {index + 1}/{deck.questions.length}
+              </Text>
+            </View>
+            <QuizWrapper>
+              <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
+                <QuizText>{current.question}</QuizText>
+              </Animated.View>
+              <Animated.View
+                style={[
+                  backAnimatedStyle,
+                  styles.flipCard,
+                  styles.flipCardBack,
+                ]}
+              >
+                <QuizText>{current.answer}</QuizText>
+              </Animated.View>
+            </QuizWrapper>
+            <View>
+              <QuizText primary onPress={() => this.flipCard()}>
+                {!this.state.isToggled ? 'Answer' : 'Question'}
+              </QuizText>
+            </View>
+            <Buttongroup>
+              <TouchableOpacity onPress={() => this.onPressButton(true)}>
+                <CorrectButton primary>
+                  <ButtonText>Correct</ButtonText>
+                </CorrectButton>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.onPressButton(false)}>
+                <IncorrectButton>
+                  <ButtonText>Incorrect</ButtonText>
+                </IncorrectButton>
+              </TouchableOpacity>
+            </Buttongroup>
+          </>
+        ) : (
+          <View>
+            <Text>test complete {correctlyAnswered + 1}</Text>
+          </View>
+        )}
+      </Container>
     )
   }
 }
+function mapStateToProps(state, { route }) {
+  // https://reactnavigation.org/docs/params
+  const { title } = route.params
+  const deck = state[title]
+  console.log('===', deck)
 
-export default QuizView
+  return {
+    deck,
+  }
+}
+
+const styles = StyleSheet.create({
+  flipCard: {
+    width: 300,
+    height: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'blue',
+    backfaceVisibility: 'hidden',
+    borderRadius: 10,
+  },
+  flipCardBack: {
+    backgroundColor: 'red',
+    position: 'absolute',
+  },
+  flipText: {
+    width: 90,
+    fontSize: 20,
+    color: 'red',
+    fontWeight: 'bold',
+  },
+})
+
+export default connect(mapStateToProps)(QuizView)

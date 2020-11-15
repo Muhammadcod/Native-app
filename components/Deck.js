@@ -1,30 +1,38 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import styled from 'styled-components/native'
 import { black, white, red } from '../utils/colors'
 
-// Create a Wrapper component that'll render a <section> tag with some styles
+// Create a Wrapper component that'll render a <View> tag with some styles
 const Wrapper = styled.View`
-  background: papayawhip;
-  border: 1px solid black;
-  text-align: center;
-  padding: 50px 10px;
-  margin-bottom: 10px;
+  background: white;
+  padding: 20px 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-top: 15px;
 `
 
-class Deck extends Component {
-  render() {
-    const { deck } = this.props
-    return (
-      <Wrapper>
-        <View>
-          <Text>{deck.title}</Text>
-          <Text>{deck.questions.length} cards</Text>
-        </View>
-      </Wrapper>
-    )
-  }
+const TitleText = styled.Text`
+  font-size: 24px;
+`
+const CardText = styled.Text`
+  font-size: 18px;
+`
+
+function Deck(props) {
+  const { deck } = props
+  return (
+    <Wrapper>
+      <View>
+        <TitleText>{deck.title}</TitleText>
+      </View>
+      <View>
+        <CardText>{deck.questions.length} cards</CardText>
+      </View>
+    </Wrapper>
+  )
 }
 
 function mapStateToProps(state, { id }) {

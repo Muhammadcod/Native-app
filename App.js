@@ -15,8 +15,8 @@ import DeckView from './components/DeckView'
 import DeckList from './components/DeckList'
 import AddDeck from './components/AddDeck'
 import AddCard from './components/AddCard'
-import { white, purple } from './utils/colors'
-// import QuizView from './components/QuizView'
+import { white, purple, darkPurp } from './utils/colors'
+import QuizView from './components/QuizView'
 
 function FlashStatusBar({ backgroundColor, ...props }) {
   return (
@@ -57,7 +57,7 @@ const TabNavigatorConfig = {
     activeTintColor: Platform.OS === 'ios' ? purple : white,
     style: {
       height: 56,
-      backgroundColor: Platform.OS === 'ios' ? white : purple,
+      backgroundColor: Platform.OS === 'ios' ? white : darkPurp,
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
         width: 0,
@@ -113,6 +113,17 @@ const StackConfig = {
       title: 'Add Card',
     },
   },
+  QuizView: {
+    name: 'QuizView',
+    component: QuizView,
+    options: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+      title: ' Quiz View',
+    },
+  },
 }
 const Stack = createStackNavigator()
 const MainNav = () => (
@@ -120,13 +131,14 @@ const MainNav = () => (
     <Stack.Screen {...StackConfig.TabNav} />
     <Stack.Screen {...StackConfig.DeckView} />
     <Stack.Screen {...StackConfig.AddCard} />
+    <Stack.Screen {...StackConfig.QuizView} />
   </Stack.Navigator>
 )
 export default function App() {
   return (
     <Provider store={createStore(reducer)}>
       <View style={{ flex: 1 }}>
-        <FlashStatusBar backgroundColor={purple} barStyle="light-content" />
+        <FlashStatusBar backgroundColor={darkPurp} barStyle="light-content" />
         <NavigationContainer>
           <MainNav />
         </NavigationContainer>

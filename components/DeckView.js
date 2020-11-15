@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import styled from 'styled-components/native'
 import { black, white, red } from '../utils/colors'
+import Deck from './Deck'
 
 const Container = styled.View`
   flex: 1;
@@ -12,7 +13,9 @@ const DeckDetails = styled(Container)`
   align-items: center;
 `
 
-const ButtonGrp = styled(DeckDetails)``
+const ButtonGrp = styled(DeckDetails)`
+  flex: 1;
+`
 
 const Button = styled.View`
   background: ${(props) => (props.primary ? 'black' : 'white')};
@@ -38,6 +41,9 @@ const DeleteButtonText = styled(ButtonText)`
   color: red;
 `
 
+const TitleText = styled.Text``
+const CardText = styled.Text``
+
 function DeckView(props) {
   const setTitle = (title) => {
     // if (!deck) return
@@ -48,7 +54,7 @@ function DeckView(props) {
     })
   }
 
-  const _onPressButton = () => {
+  const onPressButton = () => {
     alert('You tapped the button!')
   }
 
@@ -61,21 +67,33 @@ function DeckView(props) {
   return (
     <Container>
       <DeckDetails>
-        <Text>{deck.title}</Text>
-        <Text>{deck.questions.length} cards</Text>
+        <View>
+          <TitleText>{deck.title}</TitleText>
+        </View>
+        <View>
+          <CardText>{deck.questions.length} cards</CardText>
+        </View>
       </DeckDetails>
+
       <ButtonGrp>
         <TouchableOpacity onPress={() => navigation.navigate('AddCard')}>
           <Button>
             <ButtonText>Add Card</ButtonText>
           </Button>
         </TouchableOpacity>
-        <TouchableOpacity onPress={_onPressButton}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('QuizView', {
+              title: deck.title,
+              questions: deck.questions,
+            })
+          }
+        >
           <StartButton primary>
             <ButtonText primary>Start Quiz</ButtonText>
           </StartButton>
         </TouchableOpacity>
-        <TouchableOpacity onPress={_onPressButton}>
+        <TouchableOpacity onPress={onPressButton}>
           <DeleteButton primary>
             <DeleteButtonText>Delete Deck</DeleteButtonText>
           </DeleteButton>
@@ -88,10 +106,10 @@ function DeckView(props) {
 function mapStateToProps(state, { route }) {
   // https://reactnavigation.org/docs/params
   const { title } = route.params
-  const deckId = state[title]
+  const deck = state[title]
 
   return {
-    deck: deckId,
+    deck,
     title,
   }
 }

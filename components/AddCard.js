@@ -1,7 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TextInput, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { black, white, red } from '../utils/colors'
+
+const Container = styled.View`
+  flex: 1;
+`
+
+const ViewContainer = styled(Container)`
+  justify-content: center;
+  align-items: center;
+`
 
 const Button = styled.View`
   background: ${(props) => (props.primary ? 'black' : 'white')};
@@ -17,38 +26,45 @@ const ButtonText = styled.Text`
   padding: 20px;
 `
 
-class AddCard extends Component {
-  _onPressButton = () => {
+const Input = styled.TextInput`
+  border: 1px solid black;
+  margin-bottom: 20px;
+  width: 350px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+`
+
+function AddCard() {
+  const _onPressButton = () => {
     alert('You tapped the button!')
   }
 
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Type here to translate!"
-            // onChangeText=""
-            defaultValue=""
-          />
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Type here to translate!"
-            // onChangeText=""
-            defaultValue=""
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity onPress={this._onPressButton}>
-            <Button primary>
-              <ButtonText primary>Submit</ButtonText>
-            </Button>
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
-  }
+  return (
+    <Container>
+      <ViewContainer>
+        <Input
+          style={{ height: 40 }}
+          placeholder="Question"
+          // onChangeText=""
+          defaultValue=""
+        />
+        <Input
+          style={{ height: 40 }}
+          placeholder="Answer"
+          // onChangeText=""
+          defaultValue=""
+        />
+      </ViewContainer>
+      <ViewContainer style={{ flex: 1 }}>
+        <TouchableOpacity onPress={_onPressButton}>
+          <Button primary>
+            <ButtonText primary>Submit</ButtonText>
+          </Button>
+        </TouchableOpacity>
+      </ViewContainer>
+    </Container>
+  )
 }
 
 export default AddCard
