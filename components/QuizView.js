@@ -56,6 +56,7 @@ class QuizView extends Component {
   }
 
   UNSAFE_componentWillMount() {
+    // https://codedaily.io/tutorials/84/Create-a-Flip-Card-Animation-with-React-Native
     this.animatedValue = new Animated.Value(0)
     this.value = 0
     this.animatedValue.addListener(({ value }) => {
@@ -72,6 +73,7 @@ class QuizView extends Component {
   }
 
   flipCard = () => {
+    // https://codedaily.io/tutorials/84/Create-a-Flip-Card-Animation-with-React-Native
     if (this.value >= 90) {
       Animated.spring(this.animatedValue, {
         toValue: 0,
@@ -111,6 +113,7 @@ class QuizView extends Component {
   }
 
   render() {
+    // https://codedaily.io/tutorials/84/Create-a-Flip-Card-Animation-with-React-Native
     const frontAnimatedStyle = {
       transform: [{ rotateY: this.frontInterpolate }],
     }
@@ -119,7 +122,7 @@ class QuizView extends Component {
     }
     const { deck } = this.props
     const { index, quizCompleted, correctlyAnswered } = this.state
-    const current = deck.questions[index]
+    const current = deck.questions[index] //https://stackoverflow.com/questions/58144849/display-only-one-element-at-a-time-in-react-with-map
 
     return (
       <Container>

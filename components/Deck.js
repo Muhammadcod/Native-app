@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import styled from 'styled-components/native'
 import { black, white, red } from '../utils/colors'
 
-// Create a Wrapper component that'll render a <View> tag with some styles
 const Wrapper = styled.View`
   background: white;
   padding: 20px 10px;
@@ -17,6 +16,7 @@ const Wrapper = styled.View`
 const TitleText = styled.Text`
   font-size: 24px;
 `
+
 const CardText = styled.Text`
   font-size: 18px;
 `

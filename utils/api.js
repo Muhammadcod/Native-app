@@ -1,60 +1,60 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DATA_STORAGE_KEY} from './keys'
-import {decks} from './_DATA'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { DATA_STORAGE_KEY } from './keys'
+import { decks } from './_DATA'
 
-export async function getDecks() {
-    try {
-        const value = await AsyncStorage.getItem(DATA_STORAGE_KEY)
-        if (value === null) {
-            await AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(decks))
-        } else {
-            return decks
-        }
-        console.log(value)
-        return JSON.parse(value)
-    } catch (e) {
-        console.log(e)
+export const getDecks = async () => {
+  try {
+    const value = await AsyncStorage.getItem(DATA_STORAGE_KEY)
+    if (value === null) {
+      await AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(decks))
+    } else {
+      return decks
     }
+    return JSON.parse(value)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-export async function getDeck(id) {
-    try {
-        const value = await AsyncStorage.getItem(DATA_STORAGE_KEY)
-        if (value !== null) {
-            console.log('deck.id', JSON.parse(value)[id])
-            return JSON.parse(value)[id]
-        }
-    } catch (e) {
-        console.log(e)
+export const getDeck = async (id) => {
+  try {
+    const value = await AsyncStorage.getItem(DATA_STORAGE_KEY)
+    if (value !== null) {
+      console.log('deck.id', JSON.parse(value)[id])
+      return JSON.parse(value)[id]
     }
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-export async function saveDeckTitle(title) {
-    try {
-        let newDeck;
-        newDeck = await AsyncStorage.mergeItem(DATA_STORAGE_KEY, JSON.stringify({
-            [title]: {
-                title: "",
-                questions: [],
-            }
-        }));
-       return newDeck
-
-    } catch (e) {
-        console.log(e)
-    }
+export const saveDeckTitle = async (title) => {
+  try {
+    return await AsyncStorage.mergeItem(
+      DATA_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          title: '',
+          questions: [],
+        },
+      }),
+    )
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-export  async function addCardToDeck(title, card) {
-    try {
-        let newCard;
-        newCard = await AsyncStorage.mergeItem(DATA_STORAGE_KEY, JSON.stringify({
-            [title]: {
-                questions: [...decks.questions].concat(card),
-            }
-        }));
-        return newCard
-    } catch (e) {
-        console.log(e)
-    }
+export const addCardToDeck = async (title, card) => {
+  try {
+    return await AsyncStorage.mergeItem(
+      DATA_STORAGE_KEY,
+      JSON.stringify({
+        [title]: {
+          questions: [...decks.questions].concat(card),
+        },
+      }),
+    )
+  } catch (e) {
+    console.log(e)
+  }
 }
