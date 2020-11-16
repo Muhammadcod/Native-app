@@ -58,3 +58,15 @@ export const addCardToDeck = async (title, card) => {
     console.log(e)
   }
 }
+
+export const removeDeck = async (key) => {
+  try {
+    const results = await AsyncStorage.removeItem(DATA_STORAGE_KEY)
+    const data = JSON.parse(results)
+    data[key] = undefined
+    delete data[key]
+    AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(data))
+  } catch (e) {
+    console.log(e)
+  }
+}
