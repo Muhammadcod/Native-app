@@ -11,6 +11,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Constants from 'expo-constants'
 import { createStackNavigator } from '@react-navigation/stack'
 import reducer from './reducers'
+import middleware from './middleware'
 import DeckView from './components/DeckView'
 import DeckList from './components/DeckList'
 import AddDeck from './components/AddDeck'
@@ -136,7 +137,7 @@ const MainNav = () => (
 )
 export default function App() {
   return (
-    <Provider store={createStore(reducer)}>
+    <Provider store={createStore(reducer, middleware)}>
       <View style={{ flex: 1 }}>
         <FlashStatusBar backgroundColor={darkPurp} barStyle="light-content" />
         <NavigationContainer>

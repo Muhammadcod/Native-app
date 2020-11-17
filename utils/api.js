@@ -34,7 +34,7 @@ export const saveDeckTitle = async (title) => {
       DATA_STORAGE_KEY,
       JSON.stringify({
         [title]: {
-          title: '',
+          title,
           questions: [],
         },
       }),

@@ -62,9 +62,9 @@ class AddDeck extends Component {
     console.log('aaa', title)
 
     dispatch(addDeck(title))
-    dispatch(saveDeckTitle(title))
-
+    saveDeckTitle(title)
     navigation.navigate('DeckView', { title: title })
+
     this.setState({ title: '' })
   }
 
