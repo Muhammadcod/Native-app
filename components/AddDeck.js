@@ -12,6 +12,8 @@ import {
 import styled from 'styled-components/native'
 import { connect } from 'react-redux'
 import { black, white } from '../utils/colors'
+import { addDeck } from '../actions'
+import { saveDeckTitle } from '../utils/api'
 
 const Button = styled.View`
   background: ${(props) => (props.primary ? 'black' : 'white')};
@@ -46,10 +48,30 @@ const Input = styled.TextInput`
     )
 }*/
 class AddDeck extends Component {
+  state = {
+    title: '',
+  }
+
+  handleChange = (title) => {
+    console.log('+++', title)
+    this.setState({ title })
+  }
+  submit = () => {
+    const { title } = this.state
+    const { dispatch, navigation } = this.props
+    console.log('aaa', title)
+
+    dispatch(addDeck(title))
+    dispatch(saveDeckTitle(title))
+
+    navigation.navigate('DeckView', { title: title })
+    this.setState({ title: '' })
+  }
+
   toDeck = () => {}
 
   render() {
-    const input = 'Football'
+    const { title } = this.state
     return (
       <View style={{ flex: 1 }}>
         <KeyboardAvoidingView
@@ -63,8 +85,8 @@ class AddDeck extends Component {
             <Input
               style={{ height: 40 }}
               placeholder="Deck Title"
-              // onChangeText=""
-              defaultValue=""
+              onChangeText={this.handleChange}
+              defaultValue={title}
             />
           </View>
           <View
@@ -75,11 +97,7 @@ class AddDeck extends Component {
               border: '1px solid black',
             }}
           >
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate('DeckView', { title: input })
-              }
-            >
+            <TouchableOpacity onPress={this.submit}>
               <Button primary>
                 <ButtonText primary>Create Deck</ButtonText>
               </Button>
@@ -92,7 +110,6 @@ class AddDeck extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state)
   return {
     decks: state,
   }
