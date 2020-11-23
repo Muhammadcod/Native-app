@@ -44,13 +44,13 @@ export const saveDeckTitle = async (title) => {
   }
 }
 
-export const addCardToDeck = async (title, card) => {
+export const addCardToDeckAsync = async (deckId, card) => {
   try {
     return await AsyncStorage.mergeItem(
       DATA_STORAGE_KEY,
       JSON.stringify({
-        [title]: {
-          questions: [...decks.questions].concat(card),
+        [deckId]: {
+          questions: [deckId.questions].concat(card),
         },
       }),
     )
@@ -59,12 +59,13 @@ export const addCardToDeck = async (title, card) => {
   }
 }
 
-export const removeDeck = async (key) => {
+export const removeDeckAsync = async (id) => {
   try {
     const results = await AsyncStorage.removeItem(DATA_STORAGE_KEY)
     const data = JSON.parse(results)
-    data[key] = undefined
-    delete data[key]
+    data[id] = undefined
+    delete data[id]
+
     AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(data))
   } catch (e) {
     console.log(e)

@@ -29,7 +29,7 @@ function FlashStatusBar({ backgroundColor, ...props }) {
 
 const TabNavigator = {
   Home: {
-    name: 'Deck List',
+    name: 'DeckList',
     component: DeckList,
     options: {
       tabBarIcon: ({ tintColor }) => (
@@ -39,7 +39,7 @@ const TabNavigator = {
     },
   },
   AddDeck: {
-    name: 'Add Deck',
+    name: 'AddDeck',
     component: AddDeck,
     options: {
       tabBarIcon: ({ tintColor }) => (

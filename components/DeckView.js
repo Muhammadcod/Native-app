@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { TouchableOpacity, View, Text } from 'react-native'
 import styled from 'styled-components/native'
-import { black, white, red } from '../utils/colors'
-import Deck from './Deck'
+import { black, white } from '../utils/colors'
+import { removeDeck } from '../actions'
+import { removeDeckAsync } from '../utils/api'
 
 const Container = styled.View`
   flex: 1;
@@ -44,63 +45,69 @@ const DeleteButtonText = styled(ButtonText)`
 const TitleText = styled.Text``
 const CardText = styled.Text``
 
-function DeckView(props) {
-  const setTitle = (title) => {
-    // if (!deck) return
-    const { navigation } = props
+class DeckView extends Component {
+  onDelete = () => {
+    const { navigation, dispatch, deck } = this.props
+    const { title } = deck
+    const id = title
+    dispatch(removeDeck(id))
+    // .then(() => removeDeckAsync(id))
+    // .then(() => navigation.navigate('DeckList'))
+    // removeDeckAsync(id).then(() => this.props.navigation.navigate('DeckList'))
 
-    navigation.setOptions({
-      title,
-    })
+    console.log(title)
+    navigation.goBack()
   }
 
-  const onPressButton = () => {
-    alert('You tapped the button!')
+  render() {
+    const { navigation, deck } = this.props
+
+    if (!deck) return <Text>Deck Not Found!</Text>
+
+    return (
+      <Container>
+        <DeckDetails>
+          <View>
+            <TitleText>{deck.title}</TitleText>
+          </View>
+          <View>
+            <CardText>{deck.questions.length} cards</CardText>
+          </View>
+        </DeckDetails>
+
+        <ButtonGrp>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('AddCard', {
+                title: deck.title,
+              })
+            }
+          >
+            <Button>
+              <ButtonText>Add Card</ButtonText>
+            </Button>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('QuizView', {
+                title: deck.title,
+                questions: deck.questions,
+              })
+            }
+          >
+            <StartButton primary>
+              <ButtonText primary>Start Quiz</ButtonText>
+            </StartButton>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.onDelete}>
+            <DeleteButton primary>
+              <DeleteButtonText>Delete Deck</DeleteButtonText>
+            </DeleteButton>
+          </TouchableOpacity>
+        </ButtonGrp>
+      </Container>
+    )
   }
-
-  const { navigation, deck, title } = props
-
-  useEffect(() => {
-    setTitle(title)
-  })
-
-  return (
-    <Container>
-      <DeckDetails>
-        <View>
-          <TitleText>{deck.title}</TitleText>
-        </View>
-        <View>
-          <CardText>{deck.questions.length} cards</CardText>
-        </View>
-      </DeckDetails>
-
-      <ButtonGrp>
-        <TouchableOpacity onPress={() => navigation.navigate('AddCard')}>
-          <Button>
-            <ButtonText>Add Card</ButtonText>
-          </Button>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('QuizView', {
-              title: deck.title,
-              questions: deck.questions,
-            })
-          }
-        >
-          <StartButton primary>
-            <ButtonText primary>Start Quiz</ButtonText>
-          </StartButton>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onPressButton}>
-          <DeleteButton primary>
-            <DeleteButtonText>Delete Deck</DeleteButtonText>
-          </DeleteButton>
-        </TouchableOpacity>
-      </ButtonGrp>
-    </Container>
-  )
 }
 
 function mapStateToProps(state, { route }) {
@@ -110,7 +117,6 @@ function mapStateToProps(state, { route }) {
 
   return {
     deck,
-    title,
   }
 }
 export default connect(mapStateToProps)(DeckView)

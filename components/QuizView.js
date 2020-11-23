@@ -9,6 +9,7 @@ import {
 import styled from 'styled-components/native'
 import { connect } from 'react-redux'
 import { black, white, green, red, lightPurp } from '../utils/colors'
+import ResultView from './ResultView'
 
 const Container = styled.View`
   flex: 1;
@@ -20,6 +21,13 @@ const QuizWrapper = styled(View)`
   flex: 2;
   padding: 0 20px;
 `
+
+const NoCardView = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+`
+
 const Buttongroup = styled(QuizWrapper)`
   flex: 1;
   justify-content: flex-end;
@@ -51,7 +59,7 @@ class QuizView extends Component {
   state = {
     index: 0,
     isToggled: false,
-    correctlyAnswered: 0,
+    correctAnswer: 0,
     quizCompleted: false,
   }
 
@@ -121,8 +129,21 @@ class QuizView extends Component {
       transform: [{ rotateY: this.backInterpolate }],
     }
     const { deck } = this.props
-    const { index, quizCompleted, correctlyAnswered } = this.state
+    const { index, quizCompleted, correctAnswer } = this.state
     const current = deck.questions[index] //https://stackoverflow.com/questions/58144849/display-only-one-element-at-a-time-in-react-with-map
+
+    if (deck.questions.length === 0) {
+      return (
+        <Container>
+          <NoCardView>
+            <Text>
+              Sorry, you cannot take a quiz because there are no cards in the
+              deck
+            </Text>
+          </NoCardView>
+        </Container>
+      )
+    }
 
     return (
       <Container>
@@ -166,14 +187,16 @@ class QuizView extends Component {
             </Buttongroup>
           </>
         ) : (
-          <View>
+          <ResultView correct={correctAnswer} />
+          /*<View>
             <Text>test complete {correctlyAnswered + 1}</Text>
-          </View>
+          </View>*/
         )}
       </Container>
     )
   }
 }
+
 function mapStateToProps(state, { route }) {
   // https://reactnavigation.org/docs/params
   const { title } = route.params

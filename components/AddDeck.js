@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native'
-// import {}
 import styled from 'styled-components/native'
 import { connect } from 'react-redux'
 import { black, white } from '../utils/colors'
