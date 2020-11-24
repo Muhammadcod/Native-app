@@ -58,3 +58,7 @@ export const decks = {
     ],
   },
 }
+
+export function percentageCorrect(num, total, per) {
+  return (num / total) * per
+}

@@ -13,10 +13,11 @@ import { addCardToDeckAsync } from '../utils/api'
 
 const Container = styled.View`
   flex: 1;
+  background: white;
 `
 
 const ViewContainer = styled(Container)`
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 `
 
@@ -38,6 +39,7 @@ const Input = styled.TextInput`
   border: 1px solid black;
   margin-bottom: 20px;
   width: 350px;
+  padding: 0 15px;
   background: white;
   border: 1px solid black;
   border-radius: 3px;
@@ -90,8 +92,11 @@ function AddCard(props) {
             defaultValue={answer}
           />
         </ViewContainer>
-        <ViewContainer style={{ flex: 1 }}>
-          <TouchableOpacity onPress={submit}>
+        <ViewContainer>
+          <TouchableOpacity
+            disabled={question === '' || answer === ''}
+            onPress={submit}
+          >
             <Button primary>
               <ButtonText primary>Submit</ButtonText>
             </Button>

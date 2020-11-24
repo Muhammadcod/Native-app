@@ -8,6 +8,7 @@ import { removeDeckAsync } from '../utils/api'
 
 const Container = styled.View`
   flex: 1;
+  background: white;
 `
 const DeckDetails = styled(Container)`
   justify-content: center;
@@ -16,6 +17,7 @@ const DeckDetails = styled(Container)`
 
 const ButtonGrp = styled(DeckDetails)`
   flex: 1;
+  justify-content: flex-end;
 `
 
 const Button = styled.View`
@@ -24,12 +26,14 @@ const Button = styled.View`
   width: 260px;
   align-items: center;
   border-radius: 3px;
+  border: 1px solid black;
 `
 const StartButton = styled(Button)`
   border-color: white;
 `
 const DeleteButton = styled(Button)`
   background: transparent;
+  border: none;
 `
 
 const ButtonText = styled.Text`
@@ -42,27 +46,29 @@ const DeleteButtonText = styled(ButtonText)`
   color: red;
 `
 
-const TitleText = styled.Text``
-const CardText = styled.Text``
+const TitleText = styled.Text`
+  font-size: 28px;
+`
+const CardText = styled.Text`
+  font-size: 20px;
+`
 
 class DeckView extends Component {
-  onDelete = () => {
+  onDelete = async () => {
     const { navigation, dispatch, deck } = this.props
     const { title } = deck
     const id = title
     dispatch(removeDeck(id))
-    // .then(() => removeDeckAsync(id))
-    // .then(() => navigation.navigate('DeckList'))
-    // removeDeckAsync(id).then(() => this.props.navigation.navigate('DeckList'))
+    // https://knowledge.udacity.com/questions/200468
+    await removeDeckAsync(id)
 
-    console.log(title)
-    navigation.goBack()
+    navigation.navigate('DeckList')
   }
 
   render() {
     const { navigation, deck } = this.props
 
-    if (!deck) return <Text>Deck Not Found!</Text>
+    if (!deck) return false
 
     return (
       <Container>

@@ -1,7 +1,7 @@
 import { RECEIVE_DECK, ADD_DECK, ADD_CARD, REMOVE_DECK } from '../actions'
-import { decks as initialState } from '../utils/_DATA'
+import { decks as INITIAL_STATE } from '../utils/_DATA'
 
-function decks(state = initialState, action) {
+function decks(state = {}, action) {
   switch (action.type) {
     case RECEIVE_DECK:
       return {

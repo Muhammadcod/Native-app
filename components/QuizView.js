@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import styled from 'styled-components/native'
 import { connect } from 'react-redux'
+import { percentageCorrect } from '../utils/_DATA'
 import { black, white, green, red, lightPurp } from '../utils/colors'
 import ResultView from './ResultView'
 
@@ -34,7 +35,7 @@ const Buttongroup = styled(QuizWrapper)`
 `
 
 const CorrectButton = styled(View)`
-  background: ${(props) => (props.primary ? green : 'white')};
+  background: green
   margin-bottom: 20px;
   width: 260px;
   align-items: center;
@@ -42,7 +43,7 @@ const CorrectButton = styled(View)`
 `
 
 const IncorrectButton = styled(CorrectButton)`
-  background: ${(props) => (props.primary ? 'white' : red)};
+  background: red;
 `
 
 const ButtonText = styled.Text`
@@ -60,6 +61,7 @@ class QuizView extends Component {
     index: 0,
     isToggled: false,
     correctAnswer: 0,
+    incorrectAnswer: 0,
     quizCompleted: false,
   }
 
@@ -100,24 +102,46 @@ class QuizView extends Component {
     this.setState({ isToggled: !this.state.isToggled })
   }
 
-  onPressButton = (selectedAnswerStatus) => {
+  handleSelection = (selectedAnswer) => {
     const { deck } = this.props
     const { questions } = deck
-    const { index, correctlyAnswered, isToggled } = this.state
+    const { index, correctAnswer, incorrectAnswer, isToggled } = this.state
 
     if (index + 1 === questions.length) {
-      this.setState((prevState) => ({ quizCompleted: true }))
+      this.setState({ quizCompleted: true })
+      this.setState((prevState) => ({
+        correctAnswer: selectedAnswer ? correctAnswer + 1 : correctAnswer,
+        incorrectAnswer: !selectedAnswer
+          ? incorrectAnswer + 1
+          : incorrectAnswer,
+      }))
     } else {
       this.setState((prevState) => ({
         index: prevState.index + 1,
-        correctlyAnswered: selectedAnswerStatus
-          ? correctlyAnswered + 1
-          : correctlyAnswered,
+        correctAnswer: selectedAnswer ? correctAnswer + 1 : correctAnswer,
+        incorrectAnswer: !selectedAnswer
+          ? incorrectAnswer + 1
+          : incorrectAnswer,
       }))
       if (isToggled) {
         this.flipCard()
       }
     }
+  }
+
+  onReset = () => {
+    this.setState({
+      index: 0,
+      correctAnswer: 0,
+      incorrectAnswer: 0,
+      quizCompleted: false,
+    })
+  }
+
+  goBackToDeck = () => {
+    const { navigation } = this.props
+
+    navigation.goBack()
   }
 
   render() {
@@ -129,8 +153,10 @@ class QuizView extends Component {
       transform: [{ rotateY: this.backInterpolate }],
     }
     const { deck } = this.props
-    const { index, quizCompleted, correctAnswer } = this.state
+    const { index, quizCompleted, correctAnswer, incorrectAnswer } = this.state
     const current = deck.questions[index] //https://stackoverflow.com/questions/58144849/display-only-one-element-at-a-time-in-react-with-map
+
+    const score = percentageCorrect(correctAnswer, deck.questions.length, 100)
 
     if (deck.questions.length === 0) {
       return (
@@ -174,12 +200,12 @@ class QuizView extends Component {
               </QuizText>
             </View>
             <Buttongroup>
-              <TouchableOpacity onPress={() => this.onPressButton(true)}>
+              <TouchableOpacity onPress={() => this.handleSelection(true)}>
                 <CorrectButton primary>
                   <ButtonText>Correct</ButtonText>
                 </CorrectButton>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.onPressButton(false)}>
+              <TouchableOpacity onPress={() => this.handleSelection(false)}>
                 <IncorrectButton>
                   <ButtonText>Incorrect</ButtonText>
                 </IncorrectButton>
@@ -187,10 +213,23 @@ class QuizView extends Component {
             </Buttongroup>
           </>
         ) : (
-          <ResultView correct={correctAnswer} />
-          /*<View>
-            <Text>test complete {correctlyAnswered + 1}</Text>
-          </View>*/
+          <>
+            <QuizWrapper>
+              <QuizText primary>{score}%</QuizText>
+            </QuizWrapper>
+            <Buttongroup>
+              <TouchableOpacity onPress={this.onReset}>
+                <CorrectButton primary>
+                  <ButtonText>Restart Quiz</ButtonText>
+                </CorrectButton>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.goBackToDeck}>
+                <IncorrectButton>
+                  <ButtonText>Back To Deck</ButtonText>
+                </IncorrectButton>
+              </TouchableOpacity>
+            </Buttongroup>
+          </>
         )}
       </Container>
     )
@@ -201,7 +240,6 @@ function mapStateToProps(state, { route }) {
   // https://reactnavigation.org/docs/params
   const { title } = route.params
   const deck = state[title]
-  console.log('===', deck)
 
   return {
     deck,

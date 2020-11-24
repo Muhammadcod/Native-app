@@ -65,8 +65,7 @@ export const removeDeckAsync = async (id) => {
     const data = JSON.parse(results)
     data[id] = undefined
     delete data[id]
-
-    AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(data))
+    await AsyncStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(data))
   } catch (e) {
     console.log(e)
   }
