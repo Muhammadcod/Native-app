@@ -27,6 +27,7 @@ function FlashStatusBar({ backgroundColor, ...props }) {
     </View>
   )
 }
+// https://github.com/udacity/reactnd-UdaciFitness-complete/commit/9ff26370e4e5593195fdcad4d85e74f540a39220#r38496334
 
 const TabNavigator = {
   Home: {
@@ -83,7 +84,7 @@ const TabNav = () => (
   </Tab.Navigator>
 )
 
-// Config for StackNav
+// Config for StackNav https://github.com/udacity/reactnd-UdaciFitness-complete/commit/86af918722052eebafbc2892b6cd772b51a18dd4#commitcomment-38546396
 const StackNavigatorConfig = {
   headerMode: 'screen',
 }

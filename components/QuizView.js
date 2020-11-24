@@ -9,8 +9,7 @@ import {
 import styled from 'styled-components/native'
 import { connect } from 'react-redux'
 import { percentageCorrect } from '../utils/_DATA'
-import { black, white, green, red, lightPurp } from '../utils/colors'
-// import ResultView from './ResultView'
+import { white, red, orange } from '../utils/colors'
 import { setLocalNotification, clearLocalNotification } from '../utils/helpers'
 
 const Container = styled.View`
@@ -28,6 +27,12 @@ const NoCardView = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
+  flex: 1;
+  background: white;
+`
+const NoCardText = styled.Text`
+  font-size: 24px;
+  text-align: center;
 `
 
 const Buttongroup = styled(QuizWrapper)`
@@ -36,15 +41,16 @@ const Buttongroup = styled(QuizWrapper)`
 `
 
 const CorrectButton = styled(View)`
-  background: green
+ background: ${(props) => (props.primary ? 'green' : orange)}
   margin-bottom: 20px;
   width: 260px;
   align-items: center;
   border-radius: 3px;
+  
 `
 
 const IncorrectButton = styled(CorrectButton)`
-  background: red;
+  background: ${(props) => (props.primary ? 'black' : 'red')};
 `
 
 const ButtonText = styled.Text`
@@ -55,6 +61,8 @@ const ButtonText = styled.Text`
 const QuizText = styled.Text`
   color: ${(props) => (props.primary ? red : white)};
   text-align: center;
+  font-size: 22px;
+  padding: 5px;
 `
 
 class QuizView extends Component {
@@ -164,10 +172,10 @@ class QuizView extends Component {
       return (
         <Container>
           <NoCardView>
-            <Text>
-              Sorry, you cannot take a quiz because there are no cards in the
+            <NoCardText>
+              Sorry, you cannot take a quiz because there are no cards in this
               deck
-            </Text>
+            </NoCardText>
           </NoCardView>
         </Container>
       )
@@ -176,7 +184,7 @@ class QuizView extends Component {
     return (
       <Container>
         {!quizCompleted ? (
-          <>
+          <Container>
             <View>
               <Text>
                 {index + 1}/{deck.questions.length}
@@ -197,9 +205,9 @@ class QuizView extends Component {
               </Animated.View>
             </QuizWrapper>
             <View>
-              <QuizText primary onPress={() => this.flipCard()}>
+              <ButtonText primary onPress={() => this.flipCard()}>
                 {!this.state.isToggled ? 'Answer' : 'Question'}
-              </QuizText>
+              </ButtonText>
             </View>
             <Buttongroup>
               <TouchableOpacity onPress={() => this.handleSelection(true)}>
@@ -213,25 +221,31 @@ class QuizView extends Component {
                 </IncorrectButton>
               </TouchableOpacity>
             </Buttongroup>
-          </>
+          </Container>
         ) : (
-          <>
+          <Container>
             <QuizWrapper>
-              <QuizText primary>{score}%</QuizText>
+              <QuizText primary>
+                {score === 100
+                  ? `Hurray! you have a ${score}%`
+                  : score <= 50
+                  ? ` ${score}% Below par but you can study and try  again`
+                  : ` ${score}% Above average but you can study and try again`}
+              </QuizText>
             </QuizWrapper>
             <Buttongroup>
               <TouchableOpacity onPress={this.onReset}>
-                <CorrectButton primary>
+                <CorrectButton>
                   <ButtonText>Restart Quiz</ButtonText>
                 </CorrectButton>
               </TouchableOpacity>
               <TouchableOpacity onPress={this.goBackToDeck}>
-                <IncorrectButton>
+                <IncorrectButton primary>
                   <ButtonText>Back To Deck</ButtonText>
                 </IncorrectButton>
               </TouchableOpacity>
             </Buttongroup>
-          </>
+          </Container>
         )}
       </Container>
     )
