@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
-import React, { useEffect } from 'react'
+import React, { Component } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Platform, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native'
@@ -136,19 +136,21 @@ const MainNav = () => (
     <Stack.Screen {...StackConfig.QuizView} />
   </Stack.Navigator>
 )
-export default function App() {
-  useEffect(() => {
+export default class App extends Component {
+  useEffect() {
     setLocalNotification()
-  })
+  }
 
-  return (
-    <Provider store={createStore(reducer, middleware)}>
-      <View style={{ flex: 1 }}>
-        <FlashStatusBar backgroundColor={darkPurp} barStyle="light-content" />
-        <NavigationContainer>
-          <MainNav />
-        </NavigationContainer>
-      </View>
-    </Provider>
-  )
+  render() {
+    return (
+      <Provider store={createStore(reducer, middleware)}>
+        <View style={{ flex: 1 }}>
+          <FlashStatusBar backgroundColor={darkPurp} barStyle="light-content" />
+          <NavigationContainer>
+            <MainNav />
+          </NavigationContainer>
+        </View>
+      </Provider>
+    )
+  }
 }

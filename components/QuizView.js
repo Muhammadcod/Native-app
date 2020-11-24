@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { percentageCorrect } from '../utils/_DATA'
 import { black, white, green, red, lightPurp } from '../utils/colors'
 // import ResultView from './ResultView'
-import { setLocalNotification, clearLocalNotification } from './utils/helpers'
+import { setLocalNotification, clearLocalNotification } from '../utils/helpers'
 
 const Container = styled.View`
   flex: 1;
