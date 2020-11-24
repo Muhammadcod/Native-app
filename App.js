@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Platform, View } from 'react-native'
 import { createStore } from 'redux'
@@ -18,6 +18,7 @@ import AddDeck from './components/AddDeck'
 import AddCard from './components/AddCard'
 import { white, purple, darkPurp } from './utils/colors'
 import QuizView from './components/QuizView'
+import { setLocalNotification } from './utils/helpers'
 
 function FlashStatusBar({ backgroundColor, ...props }) {
   return (
@@ -136,6 +137,10 @@ const MainNav = () => (
   </Stack.Navigator>
 )
 export default function App() {
+  useEffect(() => {
+    setLocalNotification()
+  })
+
   return (
     <Provider store={createStore(reducer, middleware)}>
       <View style={{ flex: 1 }}>

@@ -10,7 +10,8 @@ import styled from 'styled-components/native'
 import { connect } from 'react-redux'
 import { percentageCorrect } from '../utils/_DATA'
 import { black, white, green, red, lightPurp } from '../utils/colors'
-import ResultView from './ResultView'
+// import ResultView from './ResultView'
+import { setLocalNotification, clearLocalNotification } from './utils/helpers'
 
 const Container = styled.View`
   flex: 1;
@@ -108,6 +109,7 @@ class QuizView extends Component {
     const { index, correctAnswer, incorrectAnswer, isToggled } = this.state
 
     if (index + 1 === questions.length) {
+      clearLocalNotification().then(setLocalNotification)
       this.setState({ quizCompleted: true })
       this.setState((prevState) => ({
         correctAnswer: selectedAnswer ? correctAnswer + 1 : correctAnswer,
